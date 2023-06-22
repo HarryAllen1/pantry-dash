@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { ThemeSupa } from '@supabase/auth-ui-shared';
+	import { page } from '$app/stores';
 	import { Auth } from '@supabase/auth-ui-svelte';
 	import { Card } from 'flowbite-svelte';
 	import { pink } from 'tailwindcss/colors';
@@ -12,7 +13,9 @@
 
 <Card color="dark">
 	<Auth
+		socialLayout="horizontal"
 		supabaseClient={supabase}
+		redirectTo="{$page.url.origin}/auth/callback"
 		theme="dark"
 		appearance={{
 			theme: ThemeSupa,
