@@ -1,0 +1,6 @@
+{
+	"[typescript]": {
+		"javascript.preferences.importModuleSpecifierEnding": "auto",
+		"typescript.preferences.importModuleSpecifierEnding": "auto"
+	}
+}
