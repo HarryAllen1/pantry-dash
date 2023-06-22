@@ -2,9 +2,10 @@ import {
 	PUBLIC_SUPABASE_URL,
 	PUBLIC_SUPABASE_ANON_KEY,
 } from '$env/static/public';
+import { redirect, type Handle } from '@sveltejs/kit';
 import { createSupabaseServerClient } from '@supabase/auth-helpers-sveltekit';
 
-export const handle = async ({ event, resolve }) => {
+export const handle = (async ({ event, resolve }) => {
 	event.locals.supabase = createSupabaseServerClient({
 		supabaseUrl: PUBLIC_SUPABASE_URL,
 		supabaseKey: PUBLIC_SUPABASE_ANON_KEY,
@@ -23,9 +24,16 @@ export const handle = async ({ event, resolve }) => {
 		return session;
 	};
 
+	if (
+		!event.url.pathname.startsWith('/auth') &&
+		!(await event.locals.getSession())
+	) {
+		throw redirect(303, '/auth/login');
+	}
+
 	return resolve(event, {
 		filterSerializedResponseHeaders(name) {
 			return name === 'content-range';
 		},
 	});
-};
+}) satisfies Handle;
