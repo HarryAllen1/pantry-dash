@@ -11,7 +11,7 @@
 	$: ({ supabase } = data);
 </script>
 
-<Card color="dark">
+<Card color="dark" class="w-96">
 	<Auth
 		socialLayout="horizontal"
 		supabaseClient={supabase}
