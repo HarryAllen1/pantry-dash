@@ -34,10 +34,11 @@
 		}}
 		magicLink={true}
 		providers={[
+			'azure',
+			'bitbucket',
 			'google',
 			'github',
 			'gitlab',
-			'bitbucket',
 			'discord',
 			'linkedin',
 			'slack',

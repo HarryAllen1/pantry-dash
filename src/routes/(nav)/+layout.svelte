@@ -11,6 +11,7 @@
 		Navbar,
 		Popover,
 	} from 'flowbite-svelte';
+	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import '../../app.css';
 
@@ -18,6 +19,8 @@
 
 	let { supabase, session } = data;
 	$: ({ supabase, session } = data);
+
+	$: currUrl = $page.url.pathname;
 
 	onMount(() => {
 		const {
@@ -39,7 +42,7 @@
 <Navbar let:hidden let:toggle>
 	<NavBrand href="/">
 		<span
-			class="self-center whitespace-nowrap text-xl font-semibold dark:text-white"
+			class="self-center whitespace-nowrap text-xl font-bold dark:text-white"
 		>
 			PantryDash
 		</span>
@@ -75,11 +78,18 @@
 		</Popover>
 		<NavHamburger on:click={toggle} />
 	</div>
-	<NavUl {hidden} class="order-1">
-		<NavLi href="/" active={true}>Dashboard</NavLi>
-		<NavLi href="/about">Recipes</NavLi>
-		<NavLi href="/services">Pantry</NavLi>
-		<NavLi href="/pricing">Dietary Restrictions</NavLi>
+	<NavUl {hidden} class="order-1" on:click={() => setTimeout(toggle, 1)}>
+		<NavLi href="/" active={currUrl === '/'}>Dashboard</NavLi>
+		<NavLi href="/recipes" active={currUrl.startsWith('/recipes')}
+			>Recipes</NavLi
+		>
+		<NavLi href="/pantry" active={currUrl.startsWith('/pantry')}>Pantry</NavLi>
+		<NavLi
+			href="/dietary-restrictions"
+			active={$page.url.pathname === '/dietary-restrictions'}
+		>
+			Dietary Restrictions
+		</NavLi>
 	</NavUl>
 </Navbar>
 
