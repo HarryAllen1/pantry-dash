@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { invalidate } from '$app/navigation';
+	import { page } from '$app/stores';
 	import {
 		A,
 		Avatar,
 		Button,
-		Heading,
 		NavBrand,
 		NavHamburger,
 		NavLi,
@@ -13,7 +13,6 @@
 		P,
 		Popover,
 	} from 'flowbite-svelte';
-	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import '../../app.css';
 
@@ -27,7 +26,7 @@
 	onMount(() => {
 		const {
 			data: { subscription },
-		} = supabase.auth.onAuthStateChange((event, _session) => {
+		} = supabase.auth.onAuthStateChange((_event, _session) => {
 			if (_session?.expires_at !== session?.expires_at) {
 				invalidate('supabase:auth');
 			}
