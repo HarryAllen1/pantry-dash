@@ -4,11 +4,13 @@
 		A,
 		Avatar,
 		Button,
+		Heading,
 		NavBrand,
 		NavHamburger,
 		NavLi,
 		NavUl,
 		Navbar,
+		P,
 		Popover,
 	} from 'flowbite-svelte';
 	import { page } from '$app/stores';
@@ -51,9 +53,9 @@
 		<Avatar
 			id="b2"
 			class="-mb-2"
-			href="/auth/login"
 			size="sm"
-			src="https://github.com/lsakunes.png"
+			src={session?.user.user_metadata.avatar_url ??
+				'https://github.com/lsakunes.png'}
 			alt="profile"
 		/>
 
@@ -63,9 +65,18 @@
 			class="w-64 text-sm font-light text-gray-500 bg-white dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800"
 		>
 			<div class="p-3">
-				<div class="flex justify-between items-center mb-2">
-					<Avatar href="/" src="https://github.com/lsakunes.png" />
-					<A href="mailto:{session?.user.email}">{session?.user.email}</A>
+				<div class="flex flex-row justify-between items-center mb-2">
+					<Avatar
+						href="/"
+						src={session?.user.user_metadata.avatar_url ??
+							'https://github.com/lsakunes.png'}
+					/>
+					<div class="flex flex-col">
+						<P class="font-bold text-lg">
+							{session?.user.user_metadata?.full_name}
+						</P>
+						<A href="mailto:{session?.user.email}">{session?.user.email}</A>
+					</div>
 				</div>
 				<div
 					class="text-base font-semibold leading-none text-gray-900 dark:text-white"
