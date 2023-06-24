@@ -14,5 +14,15 @@ const config = {
 			runtime: 'edge',
 		}),
 	},
+	vitePlugin: {
+		inspector: {
+			holdMode: true,
+		},
+	},
+	onwarn: (warning, handler) => {
+		// fuck accessibility
+		if (warning.code.startsWith('a11y-')) return;
+		handler(warning);
+	},
 };
 export default config;

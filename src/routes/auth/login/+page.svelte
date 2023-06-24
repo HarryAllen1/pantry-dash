@@ -1,50 +1,51 @@
 <script lang="ts">
-	import { ThemeSupa } from '@supabase/auth-ui-shared';
-	import { page } from '$app/stores';
-	import { Auth } from '@supabase/auth-ui-svelte';
-	import { Card } from 'flowbite-svelte';
-	import { pink } from 'tailwindcss/colors';
+	import type { Provider } from '@supabase/supabase-js';
+	import { Button, Card, Heading } from 'flowbite-svelte';
+	import ProviderIcon from '$lib/auth/ProviderIcon.svelte';
 
 	export let data;
+
+	const providers: Provider[] = [
+		'github',
+		'google',
+		'gitlab',
+		'twitter',
+		'facebook',
+		'bitbucket',
+		'discord',
+		'azure',
+		'twitch',
+		'spotify',
+		'linkedin',
+		'zoom',
+	];
 
 	let { supabase } = data;
 	$: ({ supabase } = data);
 </script>
 
-<Card color="dark" class="w-96">
-	<Auth
-		socialLayout="horizontal"
-		supabaseClient={supabase}
-		redirectTo="{$page.url.origin}/auth/callback"
-		theme="dark"
-		appearance={{
-			theme: ThemeSupa,
-			className: {
-				button:
-					'text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700',
-			},
-			variables: {
-				default: {
-					colors: {
-						brand: pink['500'],
-						brandAccent: pink['600'],
-					},
-				},
-			},
-		}}
-		magicLink={true}
-		providers={[
-			'azure',
-			'bitbucket',
-			'google',
-			'github',
-			'gitlab',
-			'discord',
-			'linkedin',
-			'slack',
-			'spotify',
-			'twitter',
-		]}
-		additionalData={{}}
-	/>
+<svelte:head>
+	<title>Login | PantryDash</title>
+</svelte:head>
+
+<Card class="w-96">
+	<Heading tag="h2" class="mb-8 w-full text-center">Login</Heading>
+
+	<div class="flex flex-col gap-2">
+		{#each providers as provider}
+			<Button
+				on:click={async () =>
+					await supabase.auth.signInWithOAuth({
+						provider,
+						options: { redirectTo: window.location.origin + '/auth/callback' },
+					})}
+				outline={true}
+				class="text-white"
+				color="alternative"
+			>
+				<ProviderIcon {provider} class="mr-2" />
+				Login with {provider.charAt(0).toUpperCase() + provider.slice(1)}
+			</Button>
+		{/each}
+	</div>
 </Card>
