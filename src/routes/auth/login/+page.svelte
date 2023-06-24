@@ -15,9 +15,9 @@
 		'discord',
 		'azure',
 		'twitch',
+		'slack',
 		'spotify',
 		'linkedin',
-		'zoom',
 	];
 
 	let { supabase } = data;
