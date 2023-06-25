@@ -63,7 +63,7 @@
 </svelte:head>
 
 <nav class="px-2 sm:px-4 py-2.5 w-full mb-4">
-	<div class="mx-auto flex flex-wrap justify-between items-center">
+	<div class="mx-auto grid grid-cols-3 justify-between items-center">
 		<NavBrand href="/">
 			<span
 				class="self-center whitespace-nowrap text-xl font-bold dark:text-white"
@@ -71,7 +71,7 @@
 				PantryDash
 			</span>
 		</NavBrand>
-		<div class="flex md:order-2 items-center gap-4">
+		<div class="flex justify-end md:order-2 items-center gap-4">
 			<Autocomplete
 				bind:value={$searchValue}
 				bind:results={autocompleteResults}
@@ -128,7 +128,12 @@
 			</Popover>
 			<NavHamburger on:click={toggle} />
 		</div>
-		<NavUl {hidden} class="order-1" on:click={() => setTimeout(toggle, 1)}>
+		<NavUl
+			{hidden}
+			class="order-1"
+			ulClass="flex flex-col p-4 mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium justify-center"
+			on:click={() => setTimeout(toggle, 1)}
+		>
 			<NavLi href="/" active={currUrl === '/'}>Dashboard</NavLi>
 			<NavLi href="/recipes" active={currUrl === '/recipes'}>Recipes</NavLi>
 			<NavLi href="/pantry" active={currUrl === '/pantry'}>Pantry</NavLi>
