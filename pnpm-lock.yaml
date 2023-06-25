@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  flowbite-svelte@0.38.5:
+    hash: x3utezhozwk52axpfonvnvoz5i
+    path: patches/flowbite-svelte@0.38.5.patch
+
 dependencies:
   '@popperjs/core':
     specifier: ^2.11.8
@@ -19,7 +24,7 @@ dependencies:
     version: 1.6.6
   flowbite-svelte:
     specifier: ^0.38.5
-    version: 0.38.5(svelte@4.0.0)
+    version: 0.38.5(patch_hash=x3utezhozwk52axpfonvnvoz5i)(svelte@4.0.0)
   tailwind-merge:
     specifier: ^1.13.2
     version: 1.13.2
@@ -1425,7 +1430,7 @@ packages:
     resolution: {integrity: sha512-5nqDSxl8nn5BSNxyR3n4I6eDmbolI6WT+QqR547RwxQapgjQBmtktdP+HTBb/a/zLsbzERTONyUB5pefh5TtjQ==}
     dev: true
 
-  /flowbite-svelte@0.38.5(svelte@4.0.0):
+  /flowbite-svelte@0.38.5(patch_hash=x3utezhozwk52axpfonvnvoz5i)(svelte@4.0.0):
     resolution: {integrity: sha512-U+aEpoLb7Vl35SwqJoCNxxDzmT4pGFNIgX63zp6aaXUxO0XYAyxZh1OlBLaOzZuKFd/KxTVWJW8EZwYNtoDu2g==}
     engines: {node: '>=16.0.0', npm: '>=7.0.0'}
     peerDependencies:
@@ -1436,6 +1441,7 @@ packages:
       svelte: 4.0.0
       tailwind-merge: 1.13.2
     dev: false
+    patched: true
 
   /flowbite@1.6.6:
     resolution: {integrity: sha512-T+IaFikHELo1PBKfT/axDqhAmKQLfm/dxVch2r07TZ+IcKwkorZjzwkVuw3OslTETniRIUf2qQvEhxk3bQCaew==}

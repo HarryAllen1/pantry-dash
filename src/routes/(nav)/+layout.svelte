@@ -45,7 +45,7 @@
 	<title>PantryDash</title>
 </svelte:head>
 
-<nav class="px-2 sm:px-4 py-2.5 w-full">
+<nav class="px-2 sm:px-4 py-2.5 w-full mb-4">
 	<div class="mx-auto flex flex-wrap justify-between items-center">
 		<NavBrand href="/">
 			<span
@@ -67,7 +67,7 @@
 			<Popover
 				placement="bottom"
 				triggeredBy="#b2"
-				class="w-64 text-sm font-light text-gray-500 bg-white dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800"
+				class="w-64 text-sm font-light text-gray-500 bg-white dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800 z-[1000]"
 			>
 				<div class="p-3">
 					<div class="flex flex-row justify-between items-center mb-2">
@@ -86,9 +86,7 @@
 					<div
 						class="text-base font-semibold leading-none text-gray-900 dark:text-white"
 					>
-						<form action="/auth/logout" method="POST">
-							<Button type="submit" class="w-full mt-4">Log Out</Button>
-						</form>
+						<Button href="/auth/logout" class="w-full mt-4">Log Out</Button>
 					</div>
 				</div>
 			</Popover>
