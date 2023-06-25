@@ -22,6 +22,12 @@
 	$: ({ supabase, session } = data);
 
 	$: currUrl = $page.url.pathname;
+	$: console.log(currUrl);
+
+	let hidden = true;
+	let toggle = () => {
+		hidden = !hidden;
+	};
 
 	onMount(() => {
 		const {
@@ -40,67 +46,67 @@
 	<title>PantryDash</title>
 </svelte:head>
 
-<Navbar let:hidden let:toggle>
-	<NavBrand href="/">
-		<span
-			class="self-center whitespace-nowrap text-xl font-bold dark:text-white"
-		>
-			PantryDash
-		</span>
-	</NavBrand>
-	<div class="flex md:order-2">
-		<Avatar
-			id="b2"
-			class="-mb-2"
-			size="sm"
-			src={session?.user.user_metadata.avatar_url ??
-				'https://github.com/lsakunes.png'}
-			alt="profile"
-		/>
+<nav class="px-2 sm:px-4 py-2.5 w-full">
+	<div class="mx-auto flex flex-wrap justify-between items-center">
+		<NavBrand href="/">
+			<span
+				class="self-center whitespace-nowrap text-xl font-bold dark:text-white"
+			>
+				PantryDash
+			</span>
+		</NavBrand>
+		<div class="flex md:order-2">
+			<Avatar
+				id="b2"
+				class="-mb-2"
+				size="sm"
+				src={session?.user.user_metadata.avatar_url ??
+					'https://github.com/lsakunes.png'}
+				alt="profile"
+			/>
 
-		<Popover
-			placement="bottom"
-			triggeredBy="#b2"
-			class="w-64 text-sm font-light text-gray-500 bg-white dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800"
-		>
-			<div class="p-3">
-				<div class="flex flex-row justify-between items-center mb-2">
-					<Avatar
-						href="/"
-						src={session?.user.user_metadata.avatar_url ??
-							'https://github.com/lsakunes.png'}
-					/>
-					<div class="flex flex-col">
-						<P class="font-bold text-lg">
-							{session?.user.user_metadata?.full_name}
-						</P>
-						<A href="mailto:{session?.user.email}">{session?.user.email}</A>
+			<Popover
+				placement="bottom"
+				triggeredBy="#b2"
+				class="w-64 text-sm font-light text-gray-500 bg-white dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800"
+			>
+				<div class="p-3">
+					<div class="flex flex-row justify-between items-center mb-2">
+						<Avatar
+							href="/"
+							src={session?.user.user_metadata.avatar_url ??
+								'https://github.com/lsakunes.png'}
+						/>
+						<div class="flex flex-col">
+							<P class="font-bold text-lg">
+								{session?.user.user_metadata?.full_name}
+							</P>
+							<A href="mailto:{session?.user.email}">{session?.user.email}</A>
+						</div>
+					</div>
+					<div
+						class="text-base font-semibold leading-none text-gray-900 dark:text-white"
+					>
+						<form action="/auth/logout" method="POST">
+							<Button type="submit" class="w-full mt-4">Log Out</Button>
+						</form>
 					</div>
 				</div>
-				<div
-					class="text-base font-semibold leading-none text-gray-900 dark:text-white"
-				>
-					<form action="/auth/logout" method="POST">
-						<Button type="submit" class="w-full mt-4">Log Out</Button>
-					</form>
-				</div>
-			</div>
-		</Popover>
-		<NavHamburger on:click={toggle} />
+			</Popover>
+			<NavHamburger on:click={toggle} />
+		</div>
+		<NavUl {hidden} class="order-1" on:click={() => setTimeout(toggle, 1)}>
+			<NavLi href="/" active={currUrl === '/'}>Dashboard</NavLi>
+			<NavLi href="/recipes" active={currUrl === '/recipes'}>Recipes</NavLi>
+			<NavLi href="/pantry" active={currUrl === '/pantry'}>Pantry</NavLi>
+			<NavLi
+				href="/dietary-restrictions"
+				active={currUrl === '/dietary-restrictions'}
+			>
+				Dietary Restrictions
+			</NavLi>
+		</NavUl>
 	</div>
-	<NavUl {hidden} class="order-1" on:click={() => setTimeout(toggle, 1)}>
-		<NavLi href="/" active={currUrl === '/'}>Dashboard</NavLi>
-		<NavLi href="/recipes" active={currUrl.startsWith('/recipes')}
-			>Recipes</NavLi
-		>
-		<NavLi href="/pantry" active={currUrl.startsWith('/pantry')}>Pantry</NavLi>
-		<NavLi
-			href="/dietary-restrictions"
-			active={$page.url.pathname === '/dietary-restrictions'}
-		>
-			Dietary Restrictions
-		</NavLi>
-	</NavUl>
-</Navbar>
+</nav>
 
 <slot />
