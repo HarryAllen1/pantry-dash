@@ -1,6 +1,8 @@
 <script lang="ts">
-	import { invalidate } from '$app/navigation';
+	import { afterNavigate, invalidate } from '$app/navigation';
 	import { page } from '$app/stores';
+	import Autocomplete from '$lib/components/Autocomplete.svelte';
+	import { autocompleteRecipe } from '$lib/spoonacular';
 	import {
 		A,
 		Avatar,
@@ -9,13 +11,12 @@
 		NavHamburger,
 		NavLi,
 		NavUl,
-		Navbar,
 		P,
 		Popover,
 	} from 'flowbite-svelte';
 	import { onMount } from 'svelte';
+	import { writable } from 'svelte/store';
 	import '../../app.css';
-	import { fade } from 'svelte/transition';
 
 	export let data;
 
@@ -29,12 +30,27 @@
 		hidden = !hidden;
 	};
 
+	const searchValue = writable('');
+	let autocompleteResults: { id: number; title: string }[] = [];
+
+	afterNavigate(() => {
+		$searchValue = '';
+	});
+
 	onMount(() => {
 		const {
 			data: { subscription },
 		} = supabase.auth.onAuthStateChange((_event, _session) => {
 			if (_session?.expires_at !== session?.expires_at) {
 				invalidate('supabase:auth');
+			}
+		});
+
+		searchValue.subscribe(async (v) => {
+			if (v.length > 0) {
+				autocompleteResults = await autocompleteRecipe(v);
+			} else {
+				autocompleteResults = [];
 			}
 		});
 
@@ -55,10 +71,29 @@
 				PantryDash
 			</span>
 		</NavBrand>
-		<div class="flex md:order-2">
+		<div class="flex md:order-2 items-center gap-4">
+			<Autocomplete
+				bind:value={$searchValue}
+				bind:results={autocompleteResults}
+				placeholder="Search"
+			>
+				<svg
+					slot="leftIcon"
+					class="w-5 h-5 text-gray-500 dark:text-gray-400"
+					fill="currentColor"
+					viewBox="0 0 20 20"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<path
+						fill-rule="evenodd"
+						d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+						clip-rule="evenodd"
+					/>
+				</svg>
+			</Autocomplete>
 			<Avatar
 				id="b2"
-				class="-mb-2"
+				class="h-10 w-10"
 				size="sm"
 				src={session?.user.user_metadata.avatar_url ??
 					'https://github.com/lsakunes.png'}

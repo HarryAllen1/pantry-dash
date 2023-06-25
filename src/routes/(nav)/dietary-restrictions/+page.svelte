@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { SpoonacularAutocompleteIngredientRes } from '$lib/spoonacular/types';
-	import { autocompleteIngredient } from '$lib/spoonacular/index';
+	import { autocompleteIngredient } from '$lib/spoonacular';
 
 	export let data;
 

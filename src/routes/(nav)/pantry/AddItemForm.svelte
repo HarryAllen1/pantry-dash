@@ -9,14 +9,53 @@
 		Label,
 		Textarea,
 	} from 'flowbite-svelte';
+	import Autocomplete from '$lib/components/Autocomplete.svelte';
+	import { writable } from 'svelte/store';
+	import { onMount } from 'svelte';
+	import { autocompleteIngredient } from '$lib/spoonacular';
 
 	let selectedUnit = 'ct';
 	let dropdownOpen = false;
+
+	const nameValue = writable('');
+	let autocompleteResults: string[];
+	const defaultUnits = [
+		'kgs',
+		'g',
+		'lbs',
+		'cups',
+		'tbsp',
+		'tsp',
+		'count',
+		'cc',
+		'ml',
+		'lt',
+	];
+	let units: string[] = defaultUnits;
+	onMount(() => {
+		nameValue.subscribe(async (v) => {
+			if (v.length > 0) {
+				autocompleteResults = (await autocompleteIngredient(v)).map(
+					(i) => i.name
+				);
+				console.log(autocompleteResults);
+			} else {
+				units = defaultUnits;
+				autocompleteResults = [];
+			}
+		});
+	});
 </script>
 
 <Label>
 	Name
-	<Input required name="name" class="mt-2" />
+	<Autocomplete
+		bind:results={autocompleteResults}
+		bind:value={$nameValue}
+		required
+		name="name"
+		class="mt-2"
+	/>
 </Label>
 <Label>
 	Location
@@ -33,7 +72,7 @@
 			<Chevron>{selectedUnit}</Chevron>
 		</Button>
 		<Dropdown bind:open={dropdownOpen}>
-			{#each ['kgs', 'g', 'lbs', 'cups', 'tbsp', 'tsp', 'count', 'cc', 'ml', 'lt'] as unit}
+			{#each units as unit}
 				<DropdownItem
 					on:click={() => {
 						selectedUnit = unit;

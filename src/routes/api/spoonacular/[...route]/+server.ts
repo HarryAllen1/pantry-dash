@@ -5,8 +5,9 @@ import { getRandomAPIKey } from './api_key';
 
 export const GET = (async ({ fetch, params: { route }, url }) => {
 	const apiKey = getRandomAPIKey();
+	console.log(apiKey || '???');
 
-	if (!apiKey) throw error(500, 'SPOONACULAR_API_KEYs not set');
+	if (!apiKey) throw error(500, 'SPOONACULAR_API_KEYS not set');
 
 	const params = url.searchParams;
 	params.append('apiKey', apiKey);
@@ -25,5 +26,7 @@ export const GET = (async ({ fetch, params: { route }, url }) => {
 				}`,
 			},
 		});
-	return json(await res.json());
+	return json(await res.json(), {
+		status: res.status,
+	});
 }) satisfies RequestHandler;

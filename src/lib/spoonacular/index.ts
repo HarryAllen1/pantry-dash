@@ -34,7 +34,7 @@ export const autocompleteRecipe = async (
 	query: string,
 	options?: SpoonacularRequestOptions & { number?: number }
 ) =>
-	spoonacularRequest<SpoonacularAutocompleteRecipeRes[], false>(
+	await spoonacularRequest<SpoonacularAutocompleteRecipeRes[], false>(
 		'/recipes/autocomplete',
 		{
 			query,
