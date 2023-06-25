@@ -22,7 +22,6 @@
 	$: ({ supabase, session } = data);
 
 	$: currUrl = $page.url.pathname;
-	$: console.log(currUrl);
 
 	let hidden = true;
 	let toggle = () => {
