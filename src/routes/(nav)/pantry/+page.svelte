@@ -16,12 +16,12 @@
 	import { sineIn } from 'svelte/easing';
 	import AddItemForm from './AddItemForm.svelte';
 	import DeeeeeeepLearning from './DeeeeeeepLearning.svelte';
+	import { recognitionDrawerHidden } from './drawerStore';
 
 	export let data;
 
 	let searchTerm = '';
 	let drawerHidden = true;
-	let imageRecognitionDrawerHidden = true;
 	let items: PantryItem[] = data.items;
 
 	data.supabase
@@ -50,7 +50,7 @@
 	};
 
 	const imageRecognition = () => {
-		imageRecognitionDrawerHidden = false;
+		$recognitionDrawerHidden = false;
 	};
 </script>
 
@@ -243,14 +243,14 @@
 		duration: 200,
 		x: 520,
 	}}
-	bind:hidden={imageRecognitionDrawerHidden}
+	bind:hidden={$recognitionDrawerHidden}
 >
 	<div class="flex items-center">
 		<Heading tag="h3">Add items by image</Heading>
 		<CloseButton
-			on:click={() => (imageRecognitionDrawerHidden = true)}
+			on:click={() => ($recognitionDrawerHidden = true)}
 			class="mb-4 dark:text-white"
 		/>
 	</div>
-	<DeeeeeeepLearning />
+	<DeeeeeeepLearning session={data.session} supabase={data.supabase} />
 </Drawer>

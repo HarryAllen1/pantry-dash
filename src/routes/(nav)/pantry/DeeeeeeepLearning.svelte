@@ -1,15 +1,26 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
+	import type { Session, SupabaseClient } from '@supabase/supabase-js';
 	import type {
 		DetectedObject,
 		ObjectDetection,
 	} from '@tensorflow-models/coco-ssd';
-	import { Button } from 'flowbite-svelte';
+	import {
+		Button,
+		Input,
+		Table,
+		TableBody,
+		TableBodyCell,
+		TableBodyRow,
+		TableHead,
+		TableHeadCell,
+	} from 'flowbite-svelte';
 	import { onDestroy, onMount } from 'svelte';
+	import type { Database } from '../../../supabase_types';
+	import { recognitionDrawerHidden } from './drawerStore';
 
-	// for restarting component
-	export let noop = {};
-	noop;
+	export let supabase: SupabaseClient<Database>;
+	export let session: Session | null;
 
 	let videoEl: HTMLVideoElement;
 	let videoStream: MediaStream;
@@ -24,6 +35,22 @@
 	});
 
 	let results: DetectedObject[] | null = null;
+	$: tableResults = results
+		? results.reduce((acc, curr) => {
+				const existing = acc.find((item) => item.class === curr.class);
+				if (existing) existing.quantity++;
+				else
+					acc.push({
+						...curr,
+						quantity: 1,
+						notes: '',
+						unit: 'ct',
+						location: 'Table',
+					});
+
+				return acc;
+		  }, [] as { class: string; quantity: number; unit: string; location: string; notes: string }[])
+		: null;
 
 	onMount(async () => {
 		await import('@tensorflow/tfjs-backend-cpu');
@@ -66,6 +93,27 @@
 		}
 	};
 
+	const deleteItem = (item: string) => {
+		results = results?.filter((res) => res.class !== item) as DetectedObject[];
+	};
+
+	const addAll = async () => {
+		await supabase.from('items').insert(
+			Array.from(
+				tableResults!,
+				({ class: fuckJs, location, notes, quantity, unit }) =>
+					Array(quantity).fill({
+						name: fuckJs,
+						location,
+						notes,
+						unit,
+						belongs_to: session?.user.id,
+					})
+			).flat()
+		);
+		$recognitionDrawerHidden = true;
+	};
+
 	onDestroy(() => {
 		if (browser) videoStream.getTracks().forEach((track) => track.stop());
 	});
@@ -100,6 +148,74 @@
 				/>
 			</svg>
 		</Button>
+
+		{#if tableResults}
+			<Table>
+				<TableHead>
+					<TableHeadCell>Item name</TableHeadCell>
+					<TableHeadCell>Location</TableHeadCell>
+					<TableHeadCell>Quantity</TableHeadCell>
+					<TableHeadCell>Notes</TableHeadCell>
+					<TableHeadCell>Delete</TableHeadCell>
+				</TableHead>
+				<TableBody tableBodyClass="divide-y">
+					{#each tableResults as result}
+						<TableBodyRow>
+							<TableBodyCell>
+								<Input bind:value={result.class} placeholder="Name" />
+							</TableBodyCell>
+							<TableBodyCell>
+								<Input placeholder="Location" bind:value={result.location} />
+							</TableBodyCell>
+							<TableBodyCell>
+								<Input
+									type="number"
+									bind:value={result.quantity}
+									placeholder="Quantity"
+								/>
+							</TableBodyCell>
+							<TableBodyCell>
+								<Input bind:value={result.notes} placeholder="Notes" />
+							</TableBodyCell>
+							<TableBodyCell>
+								<Button
+									on:click={() => {
+										deleteItem(result.class);
+									}}
+									color="red"
+									class="py-0"
+									outline={true}
+								>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke-width="1.5"
+										stroke="currentColor"
+										class="w-6 h-6"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											d="M6 18L18 6M6 6l12 12"
+										/>
+									</svg>
+								</Button>
+							</TableBodyCell>
+						</TableBodyRow>
+					{:else}
+						<TableBodyRow>
+							<TableBodyCell colspan="5" class="text-center">
+								No items detected.
+							</TableBodyCell>
+						</TableBodyRow>
+					{/each}
+				</TableBody>
+			</Table>
+			{#if tableResults.length}
+				<Button on:click={addAll} class="self-end">Add all</Button>
+			{/if}
+		{/if}
 	{:else}
 		<Button on:click={doProcessingStuff}>
 			<svg
