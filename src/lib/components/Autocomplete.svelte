@@ -83,5 +83,7 @@
 				{result.title}
 			</DropdownItem>
 		{/if}
+	{:else}
+		<DropdownItem>No results</DropdownItem>
 	{/each}
 </Dropdown>

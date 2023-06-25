@@ -43,7 +43,7 @@
 </script>
 
 <svelte:head>
-	<title>My Restrictions - PantryDash</title>
+	<title>Dietary Restrictions | PantryDash</title>
 </svelte:head>
 
 <h1 class="mb-12 w-full text-center">My Restrictions</h1>
