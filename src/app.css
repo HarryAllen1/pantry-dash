@@ -1,3 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+[for='table-search'],
+[for='table-search'] + div {
+	display: none;
+}
+
+.p-4:has(> [for='table-search']) {
+	display: none;
+}

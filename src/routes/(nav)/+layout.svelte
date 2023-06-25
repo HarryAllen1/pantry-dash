@@ -15,6 +15,7 @@
 	} from 'flowbite-svelte';
 	import { onMount } from 'svelte';
 	import '../../app.css';
+	import { fade } from 'svelte/transition';
 
 	export let data;
 
