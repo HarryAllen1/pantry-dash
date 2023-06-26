@@ -11,10 +11,10 @@
 <div class="flex flex-col w-full max-w-5xl px-4 gap-4 mx-auto mb-16">
 	<Heading class="text-center">Saved Recipes</Heading>
 
-	<div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 mt-4">
+	<div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 mt-4 gap-4">
 		{#each data.recipes as recipe}
 			<Card img={recipe.image} href="/recipe/{recipe.id}">
-				<Heading tag="h3">{recipe.title}</Heading>
+				<Heading tag="h4">{recipe.title}</Heading>
 				<div class="flex flex-col gap-4 mt-4">
 					<Badge large border>
 						<svg
