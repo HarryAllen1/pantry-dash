@@ -28,6 +28,8 @@
 	let pictureTaken = false;
 	let model: ObjectDetection;
 
+	let maxWidth = 0;
+
 	const formatter = new Intl.NumberFormat('en-US', {
 		style: 'percent',
 		minimumFractionDigits: 0,
@@ -71,6 +73,7 @@
 		const { width, height } = videoEl.getBoundingClientRect();
 		canvasEl.width = width;
 		canvasEl.height = height;
+		maxWidth = width;
 	});
 
 	const doProcessingStuff = async () => {
@@ -127,7 +130,7 @@
 
 	{#if pictureTaken}
 		{#if tableResults}
-			<Table divClass="max-w-full">
+			<Table style="width: {maxWidth}px">
 				<TableHead>
 					<TableHeadCell>Item name</TableHeadCell>
 					<TableHeadCell>Location</TableHeadCell>
