@@ -19,5 +19,5 @@ export const load = (async ({ parent }) => {
 }) satisfies PageLoad;
 
 export const config = {
-	runtime: 'node18.x',
+	runtime: 'nodejs18.x',
 };
