@@ -35,7 +35,7 @@
 
 <div class="flex flex-col w-full max-w-5xl px-4 gap-4 mx-auto mb-16">
 	{#if dietaryRestrictionHits.length}
-		<Alert color="yellow">
+		<Alert border color="yellow">
 			<Heading tag="h5" color="text-yellow-300">
 				This recipe likely contains one or more of your dietary restrictions
 			</Heading>
