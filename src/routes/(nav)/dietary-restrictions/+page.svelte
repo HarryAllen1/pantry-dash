@@ -1,7 +1,9 @@
 <script lang="ts">
 	import {
 		Button,
+		Heading,
 		Input,
+		P,
 		Table,
 		TableBody,
 		TableBodyCell,
@@ -71,6 +73,11 @@
 />
 
 <div class="flex flex-col items-center max-w-3xl mx-auto px-16">
+	<Heading class="text-center">Dietary Restrictions</Heading>
+	<P class="text-center mt-4">
+		These items will be removed from your recommendations
+	</P>
+
 	<div class="p-4 flex flex-row gap-4">
 		<label for="other-better-table-search" class="sr-only">
 			Add restriction
@@ -101,7 +108,7 @@
 			</svg>
 		</Button>
 	</div>
-	<Table divClass="w-full">
+	<Table divClass="w-full rounded-lg">
 		<TableHead>
 			<TableHeadCell>Name</TableHeadCell>
 			<TableHeadCell class="w-16">Delete</TableHeadCell>

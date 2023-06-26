@@ -6,6 +6,7 @@
 		CloseButton,
 		Drawer,
 		Heading,
+		P,
 		TableBody,
 		TableBodyCell,
 		TableBodyRow,
@@ -55,6 +56,10 @@
 </script>
 
 <div class="flex flex-col items-center w-full px-16">
+	<Heading class="text-center mb-4">Pantry</Heading>
+	<P class="text-center">
+		These items will try to be used in your recommendations
+	</P>
 	{#if items.length}
 		<div class="p-4 flex flex-row gap-4">
 			<label for="other-better-table-search" class="sr-only">Search</label>

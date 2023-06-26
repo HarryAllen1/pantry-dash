@@ -59,10 +59,6 @@
 		await import('@tensorflow/tfjs-backend-webgl');
 		const { load } = await import('@tensorflow-models/coco-ssd');
 
-		model = await load({
-			base: 'mobilenet_v2',
-		});
-
 		videoStream = await navigator.mediaDevices
 			.getUserMedia({
 				video: true,
@@ -79,6 +75,10 @@
 		canvasEl.width = width;
 		canvasEl.height = height;
 		maxWidth = width;
+
+		model = await load({
+			base: 'mobilenet_v2',
+		});
 	});
 
 	const doProcessingStuff = async () => {
@@ -228,7 +228,7 @@
 			</div>
 		{/if}
 	{:else}
-		<Button on:click={doProcessingStuff}>
+		<Button on:click={doProcessingStuff} disabled={!model}>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
 				fill="none"
