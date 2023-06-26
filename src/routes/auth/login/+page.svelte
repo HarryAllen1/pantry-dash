@@ -47,7 +47,9 @@
 				color="alternative"
 			>
 				<ProviderIcon {provider} class="mr-2" />
-				Login with {provider.charAt(0).toUpperCase() + provider.slice(1)}
+				Login with {(
+					provider.charAt(0).toUpperCase() + provider.slice(1)
+				).replace('Azure', 'Microsoft')}
 			</Button>
 		{/each}
 	</div>
