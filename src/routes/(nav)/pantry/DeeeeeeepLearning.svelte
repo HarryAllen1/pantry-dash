@@ -67,8 +67,10 @@
 		});
 		videoEl.srcObject = videoStream;
 		await videoEl.play();
-		canvasEl.width = videoEl.videoWidth;
-		canvasEl.height = videoEl.videoHeight;
+		// this is BULLSHIT
+		const { width, height } = videoEl.getBoundingClientRect();
+		canvasEl.width = width;
+		canvasEl.height = height;
 	});
 
 	const doProcessingStuff = async () => {
