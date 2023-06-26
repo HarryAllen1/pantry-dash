@@ -1,7 +1,15 @@
 <script lang="ts">
 	import { complexSearch } from '$lib/spoonacular';
 	import type { SpoonacularRecipeInfo } from '$lib/spoonacular/types.js';
-	import { Badge, Button, Card, Heading, Input, P } from 'flowbite-svelte';
+	import {
+		Badge,
+		Button,
+		Card,
+		Heading,
+		Input,
+		P,
+		Tooltip,
+	} from 'flowbite-svelte';
 
 	export let data;
 
@@ -15,6 +23,10 @@
 		imageType: string;
 	}[] &
 		SpoonacularRecipeInfo<false>[];
+
+	const concatTitle = (title: string) => {
+		return title.length > 24 ? title.slice(0, 24) : title;
+	};
 </script>
 
 <svelte:head>
@@ -28,8 +40,15 @@
 
 	<div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 mt-2 gap-4">
 		{#each filteredRecipes as recipe}
-			<Card img={recipe.image} href="/recipe/{recipe.id}">
-				<Heading tag="h4">{recipe.title}</Heading>
+			<Card img={recipe.image} class="card" href="/recipe/{recipe.id}">
+				<Heading tag="h5" class="whitespace-nowrap relative">
+					{concatTitle(recipe.title)}
+					<!-- div to make the text fade out -->
+					<div
+						class="text-fadeout absolute top-0 bottom-0 w-16 right-0 bg-gradient-to-r from-transparent to-gray-800 pointer-events-none"
+					/>
+				</Heading>
+				<Tooltip>{recipe.title}</Tooltip>
 				<div class="flex flex-col gap-4 mt-4">
 					<Badge large border>
 						<svg
@@ -119,3 +138,9 @@
 		</Button>
 	{/if}
 </div>
+
+<style>
+	:global(.card:hover div.text-fadeout) {
+		@apply to-gray-700;
+	}
+</style>
