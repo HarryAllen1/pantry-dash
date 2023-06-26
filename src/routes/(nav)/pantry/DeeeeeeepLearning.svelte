@@ -127,7 +127,7 @@
 
 	{#if pictureTaken}
 		{#if tableResults}
-			<Table>
+			<Table divClass="max-w-full">
 				<TableHead>
 					<TableHeadCell>Item name</TableHeadCell>
 					<TableHeadCell>Location</TableHeadCell>

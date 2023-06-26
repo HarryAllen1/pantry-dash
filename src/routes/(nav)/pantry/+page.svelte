@@ -264,7 +264,7 @@
 <Drawer
 	transitionType="fly"
 	placement="right"
-	width="w-[clamp(320px, 100vw, 100vw)]"
+	width="w-full lg:w-auto"
 	transitionParams={{
 		easing: sineIn,
 		duration: 200,
