@@ -62,7 +62,7 @@
 	<title>PantryDash</title>
 </svelte:head>
 
-<nav class="px-2 sm:px-4 py-2.5 w-full mb-4">
+<nav class="px-2 sm:px-4 py-2.5 w-full mb-4 print:hidden">
 	<div class="mx-auto grid grid-cols-3 justify-between items-center">
 		<NavBrand href="/">
 			<span

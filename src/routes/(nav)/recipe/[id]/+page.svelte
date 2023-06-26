@@ -1,5 +1,13 @@
 <script lang="ts">
-	import { Alert, Badge, Heading, Li, List } from 'flowbite-svelte';
+	import {
+		Alert,
+		Badge,
+		Button,
+		ButtonGroup,
+		Heading,
+		Li,
+		List,
+	} from 'flowbite-svelte';
 
 	export let data;
 
@@ -33,9 +41,11 @@
 	<title>{data.recipe.title} Recipe | Pantry Dash</title>
 </svelte:head>
 
-<div class="flex flex-col w-full max-w-5xl px-4 gap-4 mx-auto mb-16">
+<div
+	class="flex flex-col w-full max-w-5xl px-4 gap-4 mx-auto mb-16 print:!text-black print:m-8"
+>
 	{#if dietaryRestrictionHits.length}
-		<Alert border color="yellow">
+		<Alert border color="yellow" class="print:hidden">
 			<Heading tag="h5" color="text-yellow-300">
 				This recipe likely contains one or more of your dietary restrictions
 			</Heading>
@@ -47,16 +57,58 @@
 		</Alert>
 	{/if}
 
-	<Heading tag="h1" class="text-center">{data.recipe.title}</Heading>
-	<div class="flex flex-col items-center lg:grid lg:grid-cols-2 gap-4">
+	<Heading tag="h1" class="text-center print:!text-black ">
+		{data.recipe.title}
+	</Heading>
+
+	<ButtonGroup class="print:hidden">
+		<Button>
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				fill="none"
+				viewBox="0 0 24 24"
+				stroke-width="1.5"
+				stroke="currentColor"
+				class="w-6 h-6 mr-1"
+			>
+				<path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"
+				/>
+			</svg>
+			Save
+		</Button>
+		<Button on:click={() => print()}>
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				fill="none"
+				viewBox="0 0 24 24"
+				stroke-width="1.5"
+				stroke="currentColor"
+				class="w-6 h-6 mr-1"
+			>
+				<path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0021 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 00-1.913-.247M6.34 18H5.25A2.25 2.25 0 013 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 011.913-.247m10.5 0a48.536 48.536 0 00-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5zm-3 0h.008v.008H15V10.5z"
+				/>
+			</svg>
+			Print
+		</Button>
+	</ButtonGroup>
+
+	<div
+		class="flex flex-col items-center justify-start lg:grid lg:grid-cols-2 gap-4"
+	>
 		<div>
 			<img
 				src="/api/spoonacular{new URL(data.recipe.image).pathname}"
 				alt={data.recipe.title}
 			/>
 		</div>
-		<div>
-			<Heading tag="h3" class="mb-4">Description</Heading>
+		<div class="print:hidden">
+			<Heading tag="h3" class="mb-4 print:!text-black">Description</Heading>
 			<p>
 				{@html data.recipe.summary.replaceAll('spoonacular', 'PantryDash')}
 			</p>
@@ -116,7 +168,7 @@
 			¢{data.recipe.pricePerServing} per serving
 		</Badge>
 
-		<Heading tag="h3" class="my-4">Ingredients</Heading>
+		<Heading tag="h3" class="my-4 print:!text-black">Ingredients</Heading>
 
 		<List>
 			{#each data.recipe.extendedIngredients as ingredient}
@@ -124,7 +176,7 @@
 			{/each}
 		</List>
 
-		<Heading tag="h3" class="my-4">Method</Heading>
+		<Heading tag="h3" class="my-4 print:!text-black">Method</Heading>
 
 		{#if data.recipe.analyzedInstructions.length}
 			<List tag="ol">
