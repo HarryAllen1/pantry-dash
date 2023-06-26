@@ -63,10 +63,15 @@
 			base: 'mobilenet_v2',
 		});
 
-		videoStream = await navigator.mediaDevices.getUserMedia({
-			video: true,
-			audio: false,
-		});
+		videoStream = await navigator.mediaDevices
+			.getUserMedia({
+				video: true,
+				audio: false,
+			})
+			.catch((err) => {
+				alert('why though');
+				throw new Error(err);
+			});
 		videoEl.srcObject = videoStream;
 		await videoEl.play();
 		// this is BULLSHIT

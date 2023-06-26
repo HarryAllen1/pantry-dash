@@ -93,7 +93,7 @@
 			</Autocomplete>
 			<Avatar
 				id="b2"
-				class="h-10 w-10"
+				class="h-10 w-10 !bg-white"
 				size="sm"
 				src={session?.user.user_metadata.avatar_url ??
 					'https://github.com/lsakunes.png'}
@@ -108,6 +108,7 @@
 				<div class="p-3">
 					<div class="flex flex-row justify-between items-center mb-2">
 						<Avatar
+							class="!bg-white"
 							href="/"
 							src={session?.user.user_metadata.avatar_url ??
 								'https://github.com/lsakunes.png'}
