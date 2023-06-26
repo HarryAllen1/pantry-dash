@@ -17,7 +17,3 @@ export const load = (async ({ parent }) => {
 		})) as PantryItem[],
 	};
 }) satisfies PageLoad;
-
-export const config = {
-	runtime: 'nodejs18.x',
-};
