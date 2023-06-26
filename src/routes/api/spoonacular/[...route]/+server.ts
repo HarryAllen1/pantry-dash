@@ -5,6 +5,7 @@ import { getRandomAPIKey } from './api_key';
 
 export const GET = (async ({ fetch, params: { route }, url }) => {
 	const apiKey = getRandomAPIKey();
+	// DON'T REMOVE THIS!!! it makes auth break sometimes
 	console.log(apiKey || '???');
 
 	if (!apiKey) throw error(500, 'SPOONACULAR_API_KEYS not set');
