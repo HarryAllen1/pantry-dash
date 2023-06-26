@@ -1,148 +1,152 @@
 <script lang="ts">
-	import type { SpoonacularAutocompleteIngredientRes } from '$lib/spoonacular/types';
-	import { autocompleteIngredient } from '$lib/spoonacular';
+	import {
+		Button,
+		Input,
+		Table,
+		TableBody,
+		TableBodyCell,
+		TableBodyRow,
+		TableHead,
+		TableHeadCell,
+	} from 'flowbite-svelte';
+	import { writable } from 'svelte/store';
+	import Autocomplete from '$lib/components/Autocomplete.svelte';
+	import { onMount } from 'svelte';
+	import { autocompleteIngredient } from '../../../lib/spoonacular/index.js';
 
 	export let data;
 
-	let restrictions: string[] = [];
-	let autocompleteResults: SpoonacularAutocompleteIngredientRes[] = [];
-	let restrictionValue = '';
-	let alertMessage = '';
+	const itemName = writable('');
+	let itemResults: string[] = [];
 
-	const loadData = async () => {
-		const { data: supabaseData } = await data.supabase
-			.from('profiles')
-			.select('dietary_restrictions')
-			.eq('id', data.session?.user.id)
-			.single();
+	let { restrictions } = data;
 
-		restrictions = supabaseData?.dietary_restrictions ?? [];
-	};
+	data.supabase
+		.channel('restrictions')
+		.on(
+			'postgres_changes',
+			{
+				event: '*',
+				schema: 'public',
+				table: 'restrictions',
+			},
+			(payload) => {
+				if (payload.eventType === 'INSERT') {
+					restrictions = [
+						...restrictions,
+						payload.new as App.DatabaseDefinitions['public']['Tables']['restrictions']['Row'],
+					];
+				}
+			}
+		)
+		.subscribe();
 
-	$: if (data.session) {
-		loadData();
-	}
+	onMount(() => {
+		itemName.subscribe(async (v) => {
+			if (v.length > 0) {
+				itemResults = (await autocompleteIngredient(v)).map((i) => i.name);
+			} else {
+				itemResults = [];
+			}
+		});
+	});
 
-	const handleClick = async () => {
-		if (!restrictionValue) {
-			alertMessage = 'Please enter a restriction';
-			return;
-		}
-		if (restrictions.includes(restrictionValue)) {
-			alertMessage = 'You already have this restriction';
-			return;
-		}
-		restrictions.push(restrictionValue);
-		await data.supabase
-			.from('profiles')
-			.update({ dietary_restrictions: restrictions })
-			.eq('id', data.session?.user.id);
-		restrictionValue = '';
-		loadData();
+	const addItem = async () => {
+		await data.supabase.from('restrictions').insert([
+			{
+				name: $itemName,
+				belongs_to: data.session?.user.id ?? '',
+			},
+		]);
+		$itemName = '';
 	};
 </script>
 
-<svelte:head>
-	<title>Dietary Restrictions | PantryDash</title>
-</svelte:head>
+<svelte:window
+	on:keydown={(e) => {
+		if (e.key === 'Escape') {
+			$itemName = '';
+		} else if (e.key === 'Enter') addItem();
+	}}
+/>
 
-<h1 class="mb-12 w-full text-center">My Restrictions</h1>
+<div class="flex flex-col items-center max-w-3xl mx-auto px-16">
+	<div class="p-4 flex flex-row gap-4">
+		<label for="other-better-table-search" class="sr-only">
+			Add restriction
+		</label>
 
-{#if alertMessage}
-	<aside class="alert variant-ghost-error mb-8">
-		<div class="alert-message">
-			<h3>Error</h3>
-			<p>{alertMessage}</p>
-		</div>
-		<div class="alert-actions">
-			<button class="btn" on:click={() => (alertMessage = '')}>
-				<svg
-					class="w-5 h-5"
-					fill="none"
-					stroke="currentColor"
-					viewBox="0 0 24 24"
-					xmlns="http://www.w3.org/2000/svg"
-				>
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M6 18L18 6M6 6l12 12"
-					/>
-				</svg>
-			</button>
-		</div>
-	</aside>
-{/if}
-
-<div class="flex flex-row gap-4 mb-8">
-	<label for="search" class="label">
-		<input
-			class="input autocomplete"
-			autocomplete="off"
-			type="search"
-			name="search"
-			bind:value={restrictionValue}
-			on:input={async () => {
-				autocompleteResults = await autocompleteIngredient(restrictionValue);
-			}}
-			placeholder="Add Restriction"
+		<Autocomplete
+			bind:results={itemResults}
+			bind:value={$itemName}
+			type="text"
+			id="other-better-table-search"
+			class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-80 pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+			placeholder="Add restriction"
 		/>
-		{#if restrictionValue}
-			<div class="overflow-y-auto h-36 select">
-				<option value="default" disabled={true} class="contents" />
-				{#each autocompleteResults as result}
-					<option
-						on:click={() => {
-							restrictionValue = result.name;
-							handleClick();
-						}}
-						class="hover:variant-filled-primary"
-						value={result}
-					>
-						{result.name}
-					</option>
-				{/each}
-			</div>
-		{/if}
-	</label>
-	<button class="btn variant-filled-primary h-[42px]" on:click={handleClick}>
-		Add
-	</button>
-</div>
-
-<ul class="list w-64">
-	{#each restrictions as restriction}
-		<li>
-			{restriction}
-			<button
-				class="btn variant-filled-error ml-4"
-				on:click={async () => {
-					restrictions = restrictions.filter((r) => r !== restriction);
-					await data.supabase
-						.from('profiles')
-						.update({ dietary_restrictions: restrictions })
-						.eq('id', data.session?.user.id);
-					loadData();
-				}}
+		<Button on:click={addItem} class="aspect-square h-[42px] p-0 items-center ">
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				fill="none"
+				viewBox="0 0 24 24"
+				stroke-width="1.5"
+				stroke="currentColor"
+				class="w-6 h-6"
 			>
-				<svg
-					class="w-5 h-5"
-					fill="none"
-					stroke="currentColor"
-					viewBox="0 0 24 24"
-					xmlns="http://www.w3.org/2000/svg"
-				>
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M6 18L18 6M6 6l12 12"
-					/>
-				</svg>
-			</button>
-		</li>
-	{:else}
-		<li>No restrictions found</li>
-	{/each}
-</ul>
+				<path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					d="M12 4.5v15m7.5-7.5h-15"
+				/>
+			</svg>
+		</Button>
+	</div>
+	<Table divClass="w-full">
+		<TableHead>
+			<TableHeadCell>Name</TableHeadCell>
+			<TableHeadCell class="w-16">Delete</TableHeadCell>
+		</TableHead>
+		<TableBody tableBodyClass="divide-y">
+			{#each restrictions as item}
+				<TableBodyRow>
+					<TableBodyCell>{item.name}</TableBodyCell>
+					<TableBodyCell>
+						<Button
+							on:click={async () => {
+								restrictions = restrictions.filter((i) => i.id !== item.id);
+								await data.supabase
+									.from('restrictions')
+									.delete()
+									.match({ id: item.id });
+							}}
+							color="red"
+							class="py-0"
+							outline={true}
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke-width="1.5"
+								stroke="currentColor"
+								class="w-6 h-6"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									d="M6 18L18 6M6 6l12 12"
+								/>
+							</svg>
+						</Button>
+					</TableBodyCell>
+				</TableBodyRow>
+			{:else}
+				<TableBodyRow>
+					<TableBodyCell colspan="2" class="text-center">
+						No restrictions
+					</TableBodyCell>
+				</TableBodyRow>
+			{/each}
+		</TableBody>
+	</Table>
+</div>

@@ -89,6 +89,34 @@ export interface Database {
 					}
 				];
 			};
+			restrictions: {
+				Row: {
+					belongs_to: string;
+					created_at: string | null;
+					id: number;
+					name: string;
+				};
+				Insert: {
+					belongs_to: string;
+					created_at?: string | null;
+					id?: number;
+					name: string;
+				};
+				Update: {
+					belongs_to?: string;
+					created_at?: string | null;
+					id?: number;
+					name?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'restrictions_belongs_to_fkey';
+						columns: ['belongs_to'];
+						referencedRelation: 'profiles';
+						referencedColumns: ['id'];
+					}
+				];
+			};
 			saved: {
 				Row: {
 					created_at: string;
