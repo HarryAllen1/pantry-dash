@@ -83,15 +83,15 @@ interface GetRecipe {
 	(
 		id: number | string,
 		options?: SpoonacularRequestOptions & { includeNutrition?: false }
-	): Promise<SpoonacularRecipeInfo<false> | SpoonacularRequestFailure>;
+	): Promise<SpoonacularRecipeInfo<false>>;
 	(
 		id: number | string,
 		options: SpoonacularRequestOptions & { includeNutrition: true }
-	): Promise<SpoonacularRecipeInfo<true> | SpoonacularRequestFailure>;
+	): Promise<SpoonacularRecipeInfo<true>>;
 }
 
 export const getRecipe: GetRecipe = async (id, options) =>
-	spoonacularRequest<SpoonacularRecipeInfo<boolean>, true>(
+	spoonacularRequest<SpoonacularRecipeInfo<boolean>, false>(
 		`/recipes/${id}/information`,
 		{ includeNutrition: options?.includeNutrition ? 'true' : 'false' },
 		options

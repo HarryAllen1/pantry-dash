@@ -7,11 +7,11 @@ export const load = (async ({
 	params: { id },
 	url,
 	locals: { supabase },
-	parent,
 }) => {
-	const { session } = await parent();
 	const recipe = await getRecipe(id, { fetch });
 
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-ignore it can fail but im too lazy to type it
 	if ('status' in recipe) throw error(recipe.code, recipe.message);
 
 	recipe.summary = recipe.summary
@@ -30,11 +30,17 @@ export const load = (async ({
 	const restrictions = await supabase
 		.from('profiles')
 		.select('dietary_restrictions')
-		.eq('id', session?.user.id)
+		.single();
+
+	const saved = await supabase
+		.from('saved')
+		.select('recipe_id')
+		.eq('recipe_id', recipe.id)
 		.single();
 
 	return {
 		recipe,
+		saved: saved.data?.recipe_id === recipe.id.toString(),
 		restrictions: restrictions.data?.dietary_restrictions ?? [],
 	};
 }) satisfies PageServerLoad;

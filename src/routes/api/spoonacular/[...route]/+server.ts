@@ -25,9 +25,13 @@ export const GET = (async ({ fetch, params: { route }, url }) => {
 				'Content-Type': `image/${
 					route.endsWith('jpg') || route.endsWith('jpeg') ? 'jpeg' : 'png'
 				}`,
+				'Cache-Control': 'max-age=31536000,immutable',
 			},
 		});
 	return json(await res.json(), {
 		status: res.status,
+		headers: {
+			'Cache-Control': 'max-age=31536000,immutable',
+		},
 	});
 }) satisfies RequestHandler;

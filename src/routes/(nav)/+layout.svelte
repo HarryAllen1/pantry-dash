@@ -103,13 +103,12 @@
 			<Popover
 				placement="bottom"
 				triggeredBy="#b2"
-				class="w-64 text-sm font-light text-gray-500 bg-white dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800 z-[1000]"
+				class=" text-sm font-light text-gray-500 bg-white dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800 z-[1000]"
 			>
 				<div class="p-3">
-					<div class="flex flex-row justify-between items-center mb-2">
+					<div class="flex flex-row justify-between items-center mb-2 gap-4">
 						<Avatar
 							class="!bg-white"
-							href="/"
 							src={session?.user.user_metadata.avatar_url ??
 								'https://github.com/lsakunes.png'}
 						/>
@@ -136,7 +135,7 @@
 			on:click={() => setTimeout(toggle, 1)}
 		>
 			<NavLi href="/" active={currUrl === '/'}>Dashboard</NavLi>
-			<NavLi href="/recipes" active={currUrl === '/recipes'}>Recipes</NavLi>
+			<NavLi href="/saved" active={currUrl === '/saved'}>Saved Recipes</NavLi>
 			<NavLi href="/pantry" active={currUrl === '/pantry'}>Pantry</NavLi>
 			<NavLi
 				href="/dietary-restrictions"
