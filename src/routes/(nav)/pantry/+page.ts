@@ -17,3 +17,7 @@ export const load = (async ({ parent }) => {
 		})) as PantryItem[],
 	};
 }) satisfies PageLoad;
+
+export const config = {
+	runtime: 'node18.x',
+};
