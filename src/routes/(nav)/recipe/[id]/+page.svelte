@@ -116,7 +116,7 @@
 			¢{data.recipe.pricePerServing} per serving
 		</Badge>
 
-		<Heading tag="h3" class="mb-4">Ingredients</Heading>
+		<Heading tag="h3" class="my-4">Ingredients</Heading>
 
 		<List>
 			{#each data.recipe.extendedIngredients as ingredient}
@@ -124,11 +124,11 @@
 			{/each}
 		</List>
 
-		<Heading tag="h3" class="mb-4">Method</Heading>
+		<Heading tag="h3" class="my-4">Method</Heading>
 
 		{#if data.recipe.analyzedInstructions.length}
-			<List type="li">
-				{#each data.recipe.analyzedInstructions[0].steps as step, i}
+			<List tag="ol">
+				{#each data.recipe.analyzedInstructions[0].steps as step}
 					<Li>
 						{step.step}
 					</Li>
