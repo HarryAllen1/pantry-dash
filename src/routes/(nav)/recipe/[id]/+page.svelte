@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Heading, Alert, P, List, Li, Badge } from 'flowbite-svelte';
+	import { Alert, Badge, Heading, Li, List } from 'flowbite-svelte';
 
 	export let data;
 
