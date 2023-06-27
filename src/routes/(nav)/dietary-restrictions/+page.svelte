@@ -1,8 +1,9 @@
 <script lang="ts">
+	import Autocomplete from '$lib/components/Autocomplete.svelte';
+	import { autocompleteIngredient } from '$lib/spoonacular';
 	import {
 		Button,
 		Heading,
-		Input,
 		P,
 		Table,
 		TableBody,
@@ -11,10 +12,8 @@
 		TableHead,
 		TableHeadCell,
 	} from 'flowbite-svelte';
-	import { writable } from 'svelte/store';
-	import Autocomplete from '$lib/components/Autocomplete.svelte';
 	import { onMount } from 'svelte';
-	import { autocompleteIngredient } from '../../../lib/spoonacular/index.js';
+	import { writable } from 'svelte/store';
 
 	export let data;
 

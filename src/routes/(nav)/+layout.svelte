@@ -122,7 +122,14 @@
 					<div
 						class="text-base font-semibold leading-none text-gray-900 dark:text-white"
 					>
-						<Button href="/auth/logout" class="w-full mt-4">Log Out</Button>
+						<Button
+							on:click={async () => {
+								await supabase.auth.signOut();
+								await invalidate('supabase:auth');
+								location.href = '/auth/login';
+							}}
+							class="w-full mt-4">Log Out</Button
+						>
 					</div>
 				</div>
 			</Popover>
