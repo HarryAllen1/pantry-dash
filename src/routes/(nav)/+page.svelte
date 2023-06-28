@@ -23,10 +23,6 @@
 		imageType: string;
 	}[] &
 		SpoonacularRecipeInfo<false>[];
-
-	const concatTitle = (title: string) => {
-		return title.length > 24 ? title.slice(0, 24) : title;
-	};
 </script>
 
 <svelte:head>
@@ -42,7 +38,7 @@
 		{#each filteredRecipes as recipe}
 			<Card img={recipe.image} class="card" href="/recipe/{recipe.id}">
 				<Heading tag="h5" class="whitespace-nowrap relative overflow-hidden">
-					{concatTitle(recipe.title)}
+					{recipe.title}
 					<!-- div to make the text fade out -->
 					<div
 						class="text-fadeout absolute top-0 bottom-0 w-16 right-0 bg-gradient-to-r from-transparent to-gray-800 pointer-events-none"
