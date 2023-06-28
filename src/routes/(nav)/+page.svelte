@@ -41,7 +41,7 @@
 	<div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 mt-2 gap-4">
 		{#each filteredRecipes as recipe}
 			<Card img={recipe.image} class="card" href="/recipe/{recipe.id}">
-				<Heading tag="h5" class="whitespace-nowrap relative">
+				<Heading tag="h5" class="whitespace-nowrap relative overflow-hidden">
 					{concatTitle(recipe.title)}
 					<!-- div to make the text fade out -->
 					<div
