@@ -2,20 +2,22 @@
 	import RecipeCard from '$lib/components/RecipeCard.svelte';
 	import { complexSearch } from '$lib/spoonacular';
 	import type { SpoonacularRecipeInfo } from '$lib/spoonacular/types';
-	import { Button, Heading, Input, P } from 'flowbite-svelte';
+	import { A, Button, Heading, Input, P } from 'flowbite-svelte';
 
 	export let data;
 
 	let filter = '';
-	$: filteredRecipes = data.recipes.results.filter((r) =>
-		r.title.toLowerCase().includes(filter.toLowerCase())
-	) as {
-		id: number;
-		title: string;
-		image: string;
-		imageType: string;
-	}[] &
-		SpoonacularRecipeInfo<false>[];
+	$: filteredRecipes = data.recipes.results.length
+		? (data.recipes.results.filter((r) =>
+				r.title.toLowerCase().includes(filter.toLowerCase())
+		  ) as {
+				id: number;
+				title: string;
+				image: string;
+				imageType: string;
+		  }[] &
+				SpoonacularRecipeInfo<false>[])
+		: [];
 </script>
 
 <svelte:head>
@@ -25,7 +27,12 @@
 <div class="flex flex-col w-full max-w-5xl px-4 gap-4 mx-auto mb-16">
 	<Heading class="text-center">Suggested Recipes</Heading>
 
-	<Input bind:value={filter} class="mt-4" placeholder="Filter results" />
+	<Input
+		bind:value={filter}
+		class="mt-4"
+		disabled={!data.recipes.results.length}
+		placeholder="Filter results"
+	/>
 
 	<div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 mt-2 gap-4">
 		{#each filteredRecipes as recipe}
@@ -40,7 +47,7 @@
 		{:else}
 			<div />
 			<P class="text-center">
-				Add some items to your <a href="/pantry">pantry</a> to get started! (the
+				Add some items to <A href="/pantry">your pantry</A> to get started! (the
 				ingredients you have might not make a recipe as well)
 			</P>
 			<div />

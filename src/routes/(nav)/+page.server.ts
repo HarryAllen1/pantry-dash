@@ -1,4 +1,8 @@
 import { complexSearch } from '$lib/spoonacular';
+import type {
+	SpoonacularRecipeInfo,
+	SpoonacularSearchRes,
+} from '$lib/spoonacular/types';
 import type { PageServerLoad } from './$types';
 
 export const load = (async ({ locals: { supabase, getSession }, fetch }) => {
@@ -27,18 +31,29 @@ export const load = (async ({ locals: { supabase, getSession }, fetch }) => {
 	return {
 		ingredients,
 		restrictions,
-		recipes: complexSearch(
-			{
-				includeIngredients: ingredients.map((i) => i.toLowerCase()).join(','),
-				excludeIngredients: (restrictions ?? [])
-					.map((i) => i.name.toLowerCase())
-					.join(','),
-				number: 25,
-				addRecipeInformation: true,
-			},
-			{
-				fetch,
-			}
-		),
+		recipes: ingredients.length
+			? complexSearch(
+					{
+						includeIngredients: ingredients
+							.map((i) => i.toLowerCase())
+							.join(','),
+						excludeIngredients: (restrictions ?? [])
+							.map((i) => i.name.toLowerCase())
+							.join(','),
+						number: 25,
+						addRecipeInformation: true,
+					},
+					{
+						fetch,
+					}
+			  )
+			: Promise.resolve({
+					results: [],
+					number: 0,
+					offset: 0,
+					totalResults: 0,
+			  } as SpoonacularSearchRes & {
+					results: SpoonacularRecipeInfo<false>[];
+			  }),
 	};
 }) satisfies PageServerLoad;
