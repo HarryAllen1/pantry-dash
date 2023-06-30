@@ -34,7 +34,10 @@
 		placeholder="Filter results"
 	/>
 
-	<div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 mt-2 gap-4">
+	<div
+		class:grid={filteredRecipes.length}
+		class="grid-cols-2 md:grid-cols-2 lg:grid-cols-3 mt-2 gap-4"
+	>
 		{#each filteredRecipes as recipe}
 			<RecipeCard
 				title={recipe.title}
