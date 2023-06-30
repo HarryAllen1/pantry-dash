@@ -25,7 +25,7 @@
 		"postcss": "^8.4.24",
 		"prettier": "^2.8.0",
 		"prettier-plugin-svelte": "^2.8.1",
-		"svelte": "^4.0.0",
+		"svelte": "^4.0.1",
 		"svelte-check": "^3.0.1",
 		"svelte-preprocess": "^5.0.3",
 		"tailwindcss": "^3.3.1",
@@ -43,13 +43,10 @@
 		"@tensorflow/tfjs-backend-webgl": "^4.8.0",
 		"@tensorflow/tfjs-core": "^4.8.0",
 		"flowbite": "^1.6.6",
-		"flowbite-svelte": "^0.38.5",
+		"flowbite-svelte": "^0.39.1",
 		"tailwind-merge": "^1.13.2"
 	},
 	"pnpm": {
-		"patchedDependencies": {
-			"flowbite-svelte@0.38.5": "patches/flowbite-svelte@0.38.5.patch"
-		},
 		"peerDependencyRules": {
 			"allowedVersions": {
 				"@tensorflow/tfjs-core": "4"
