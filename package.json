@@ -43,7 +43,7 @@
 		"@tensorflow/tfjs-backend-webgl": "^4.8.0",
 		"@tensorflow/tfjs-core": "^4.8.0",
 		"flowbite": "^1.6.6",
-		"flowbite-svelte": "^0.38.5",
+		"flowbite-svelte": "^0.39.0",
 		"tailwind-merge": "^1.13.2"
 	},
 	"pnpm": {
