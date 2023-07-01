@@ -8,6 +8,7 @@ import type { PageServerLoad } from './$types';
 export const load = (async ({ locals: { supabase, getSession }, fetch }) => {
 	const session = await getSession();
 
+	// @StudentUser101 check if this has stuff (ie not empty array)
 	const initialPantryItems =
 		(
 			await supabase
@@ -32,7 +33,8 @@ export const load = (async ({ locals: { supabase, getSession }, fetch }) => {
 		ingredients,
 		restrictions,
 		recipes: ingredients.length
-			? complexSearch(
+			? // @StudentUser101 check if this call returns nothing. if not, re-run the call with a random item removed.
+			  complexSearch(
 					{
 						includeIngredients: ingredients
 							.map((i) => i.toLowerCase())
