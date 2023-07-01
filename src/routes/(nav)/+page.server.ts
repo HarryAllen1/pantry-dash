@@ -15,6 +15,7 @@ export const load = (async ({ locals: { supabase, getSession }, fetch }) => {
 				.from('items')
 				.select('*')
 				.filter('belongs_to', 'eq', session?.user.id)
+				.order('created_at')
 		).data?.map((i) => ({
 			id: i.id,
 			name: i.name ?? 'Not given',
@@ -34,7 +35,7 @@ export const load = (async ({ locals: { supabase, getSession }, fetch }) => {
 		restrictions,
 		recipes: ingredients.length
 			? // @StudentUser101 check if this call returns nothing. if not, re-run the call with a random item removed.
-			  complexSearch(
+			  await complexSearch(
 					{
 						includeIngredients: ingredients
 							.map((i) => i.toLowerCase())
@@ -48,8 +49,39 @@ export const load = (async ({ locals: { supabase, getSession }, fetch }) => {
 					{
 						fetch,
 					}
-			  )
-			: Promise.resolve({
+			  	)
+				? await complexSearch(
+					{
+						includeIngredients: ingredients
+							.map((i) => i.toLowerCase())
+							.join(','),
+						excludeIngredients: (restrictions ?? [])
+							.map((i) => i.name.toLowerCase())
+							.join(','),
+						number: 25,
+						addRecipeInformation: true,
+					},
+					{
+						fetch,
+					}
+			  	)
+				: await complexSearch(
+					{
+						ingredients = ingredients.shift(),
+						includeIngredients: ingredients
+							.map((i) => i.toLowerCase())
+							.join(','),
+						excludeIngredients: (restrictions ?? [])
+							.map((i) => i.name.toLowerCase())
+							.join(','),
+						number: 25,
+						addRecipeInformation: true,
+					},
+					{
+						fetch,
+					}
+			  	)
+			: ({
 					results: [],
 					number: 0,
 					offset: 0,
