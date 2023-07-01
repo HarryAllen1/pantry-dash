@@ -61,7 +61,9 @@
 
 		videoStream = await navigator.mediaDevices
 			.getUserMedia({
-				video: true,
+				video: {
+					facingMode: 'environment',
+				},
 				audio: false,
 			})
 			.catch((err) => {

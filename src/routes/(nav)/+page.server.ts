@@ -30,57 +30,62 @@ export const load = (async ({ locals: { supabase, getSession }, fetch }) => {
 		.from('restrictions')
 		.select('*');
 
+	const complexSearchMinusOne = () => {
+		ingredients.shift();
+
+		return complexSearch(
+			{
+				includeIngredients: ingredients.map((i) => i.toLowerCase()).join(','),
+				excludeIngredients: (restrictions ?? [])
+					.map((i) => i.name.toLowerCase())
+					.join(','),
+				number: 25,
+				addRecipeInformation: true,
+			},
+			{
+				fetch,
+			}
+		);
+	};
+
 	return {
 		ingredients,
 		restrictions,
 		recipes: ingredients.length
 			? // @StudentUser101 check if this call returns nothing. if not, re-run the call with a random item removed.
-			  await complexSearch(
-					{
-						includeIngredients: ingredients
-							.map((i) => i.toLowerCase())
-							.join(','),
-						excludeIngredients: (restrictions ?? [])
-							.map((i) => i.name.toLowerCase())
-							.join(','),
-						number: 25,
-						addRecipeInformation: true,
-					},
-					{
-						fetch,
-					}
-			  	)
+			  (
+					await complexSearch(
+						{
+							includeIngredients: ingredients
+								.map((i) => i.toLowerCase())
+								.join(','),
+							excludeIngredients: (restrictions ?? [])
+								.map((i) => i.name.toLowerCase())
+								.join(','),
+							number: 25,
+							addRecipeInformation: true,
+						},
+						{
+							fetch,
+						}
+					)
+			  ).results.length
 				? await complexSearch(
-					{
-						includeIngredients: ingredients
-							.map((i) => i.toLowerCase())
-							.join(','),
-						excludeIngredients: (restrictions ?? [])
-							.map((i) => i.name.toLowerCase())
-							.join(','),
-						number: 25,
-						addRecipeInformation: true,
-					},
-					{
-						fetch,
-					}
-			  	)
-				: await complexSearch(
-					{
-						ingredients = ingredients.shift(),
-						includeIngredients: ingredients
-							.map((i) => i.toLowerCase())
-							.join(','),
-						excludeIngredients: (restrictions ?? [])
-							.map((i) => i.name.toLowerCase())
-							.join(','),
-						number: 25,
-						addRecipeInformation: true,
-					},
-					{
-						fetch,
-					}
-			  	)
+						{
+							includeIngredients: ingredients
+								.map((i) => i.toLowerCase())
+								.join(','),
+							excludeIngredients: (restrictions ?? [])
+								.map((i) => i.name.toLowerCase())
+								.join(','),
+							number: 25,
+							addRecipeInformation: true,
+						},
+						{
+							fetch,
+						}
+				  )
+				: await complexSearchMinusOne()
 			: ({
 					results: [],
 					number: 0,

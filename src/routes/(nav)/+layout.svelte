@@ -17,6 +17,7 @@
 	import { onMount } from 'svelte';
 	import { writable } from 'svelte/store';
 	import '../../app.css';
+	import { pages } from './pages';
 
 	export let data;
 
@@ -63,7 +64,7 @@
 </svelte:head>
 
 <nav class="px-2 sm:px-4 py-2.5 w-full mb-4 print:hidden">
-	<div class="mx-auto grid grid-cols-3 justify-between items-center">
+	<div class="mx-auto grid grid-cols-3 justify-between items-center w-full">
 		<NavBrand href="/" class="ml-4">
 			<span
 				class="self-center whitespace-nowrap text-xl font-bold dark:text-white"
@@ -141,15 +142,9 @@
 			ulClass="flex flex-col p-4 mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium justify-center"
 			on:click={() => setTimeout(toggle, 1)}
 		>
-			<NavLi href="/" active={currUrl === '/'}>Dashboard</NavLi>
-			<NavLi href="/saved" active={currUrl === '/saved'}>Saved Recipes</NavLi>
-			<NavLi href="/pantry" active={currUrl === '/pantry'}>Pantry</NavLi>
-			<NavLi
-				href="/dietary-restrictions"
-				active={currUrl === '/dietary-restrictions'}
-			>
-				Dietary Restrictions
-			</NavLi>
+			{#each pages as { title, href }}
+				<NavLi {href} active={currUrl === href}>{title}</NavLi>
+			{/each}
 		</NavUl>
 	</div>
 </nav>
