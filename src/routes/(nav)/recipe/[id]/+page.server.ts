@@ -27,10 +27,7 @@ export const load = (async ({
 		.replaceAll('https://spoonacular.com', url.origin)
 		.replaceAll(`${url.origin}/recipes`, `${url.origin}/recipe`);
 
-	const restrictions = await supabase
-		.from('profiles')
-		.select('dietary_restrictions')
-		.single();
+	const restrictions = await supabase.from('restrictions').select('name');
 
 	const saved = await supabase
 		.from('saved')
@@ -41,6 +38,6 @@ export const load = (async ({
 	return {
 		recipe,
 		saved: saved.data?.recipe_id === recipe.id.toString(),
-		restrictions: restrictions.data?.dietary_restrictions ?? [],
+		restrictions: restrictions.data?.map((r) => r.name) ?? [],
 	};
 }) satisfies PageServerLoad;

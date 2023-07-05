@@ -12,7 +12,11 @@ export const pages: { href: string; title: string }[] = [
 		href: '/pantry',
 	},
 	{
-		title: 'Dietary Restrictions',
+		title: 'Restrictions',
 		href: '/dietary-restrictions',
+	},
+	{
+		title: 'Custom Recipes',
+		href: '/custom',
 	},
 ];

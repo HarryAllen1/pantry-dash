@@ -32,9 +32,6 @@
 	) {
 		dietaryRestrictionHits.push('dairy');
 	}
-	if (data.restrictions.includes('meat') && !data.recipe.vegetarian) {
-		dietaryRestrictionHits.push('meat');
-	}
 
 	const saveRecipe = async () => {
 		if (data.saved) {

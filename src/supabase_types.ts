@@ -3,12 +3,52 @@ export type Json =
 	| number
 	| boolean
 	| null
-	| { [key: string]: Json }
+	| { [key: string]: Json | undefined }
 	| Json[];
 
 export interface Database {
 	public: {
 		Tables: {
+			custom: {
+				Row: {
+					created_at: string;
+					created_by: string;
+					description: string | null;
+					id: string;
+					image: string;
+					ingredients: string;
+					method: string;
+					title: string;
+				};
+				Insert: {
+					created_at?: string;
+					created_by: string;
+					description?: string | null;
+					id?: string;
+					image?: string;
+					ingredients?: string;
+					method: string;
+					title: string;
+				};
+				Update: {
+					created_at?: string;
+					created_by?: string;
+					description?: string | null;
+					id?: string;
+					image?: string;
+					ingredients?: string;
+					method?: string;
+					title?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'custom_created_by_fkey';
+						columns: ['created_by'];
+						referencedRelation: 'profiles';
+						referencedColumns: ['id'];
+					}
+				];
+			};
 			items: {
 				Row: {
 					belongs_to: string | null;
